@@ -24,17 +24,17 @@ public class TrybankLib
     // 1. Construa a funcionalidade de cadastrar novas contas
     public void RegisterAccount(int number, int agency, int pass)
     {
-        for (int i = 0; i < maxAccounts; i += 1)
+        for (int i = 0; i < registeredAccounts; i += 1)
         {
             if (Bank[i, 0] == number && Bank[i, 1] == agency)
             {
                 throw new ArgumentException("A conta já está sendo usada!");
             }
-            Bank[registeredAccounts, 0] = number;
-            Bank[registeredAccounts, 1] = agency;
-            Bank[registeredAccounts, 2] = pass;
-            Bank[registeredAccounts, 3] = 0;
         }
+        Bank[registeredAccounts, 0] = number;
+        Bank[registeredAccounts, 1] = agency;
+        Bank[registeredAccounts, 2] = pass;
+        Bank[registeredAccounts, 3] = 0;
         registeredAccounts += 1;
     }
 
@@ -112,7 +112,22 @@ public class TrybankLib
     // 7. Construa a funcionalidade de transferir dinheiro entre contas
     public void Transfer(int destinationNumber, int destinationAgency, int value)
     {
-        throw new NotImplementedException();
+        if (Logged == false) 
+        {
+            throw new AccessViolationException("Usuário não está logado");
+        } 
+        else if (Bank[loggedUser, 3] < value) 
+        {
+            throw new InvalidOperationException("Saldo insuficiente");
+        }
+        for (int i = 0; i < registeredAccounts; i += 1)
+        {
+            if(Bank[i, 0] == destinationNumber && Bank[i, 1] == destinationAgency)
+            {
+                Bank[i, 3] += value;
+                Bank[loggedUser, 3] -= value;
+            }
+        }
     }
 
 
