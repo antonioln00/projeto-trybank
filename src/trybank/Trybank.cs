@@ -24,24 +24,46 @@ public class TrybankLib
     // 1. Construa a funcionalidade de cadastrar novas contas
     public void RegisterAccount(int number, int agency, int pass)
     {
-        for(int i = 0; i < maxAccounts; i += 1)
+        for (int i = 0; i < maxAccounts; i += 1)
         {
-            if(Bank[i, 0] == number && Bank[i, 1] == agency) 
+            if (Bank[i, 0] == number && Bank[i, 1] == agency)
             {
                 throw new ArgumentException("A conta já está sendo usada!");
             }
-                Bank[registeredAccounts, 0] = number;
-                Bank[registeredAccounts, 1] = agency;
-                Bank[registeredAccounts, 2] = pass;
-                Bank[registeredAccounts, 3] = 0;
+            Bank[registeredAccounts, 0] = number;
+            Bank[registeredAccounts, 1] = agency;
+            Bank[registeredAccounts, 2] = pass;
+            Bank[registeredAccounts, 3] = 0;
         }
-                registeredAccounts += 1;   
+        registeredAccounts += 1;
     }
 
     // 2. Construa a funcionalidade de fazer Login
     public void Login(int number, int agency, int pass)
     {
-        throw new NotImplementedException();
+        if (Logged == true)
+        {
+            throw new AccessViolationException("Usuário já está logado");
+        }
+
+        for (int i = 0; i < maxAccounts; i += 1)
+        {
+            if (Bank[i, 0] == number && Bank[i, 1] == agency)
+            {
+                if(Bank[i, 2] == pass)
+                {
+                    Logged = true;
+                    loggedUser = i;
+                } else 
+                {
+                    throw new ArgumentException("Senha incorreta");
+                }
+            } 
+        }
+        if (Logged == false) 
+        {
+                throw new ArgumentException("Agência + Conta não encontrada");
+        }
     }
 
     // 3. Construa a funcionalidade de fazer Logout
@@ -53,7 +75,7 @@ public class TrybankLib
     // 4. Construa a funcionalidade de checar o saldo
     public int CheckBalance()
     {
-        throw new NotImplementedException();   
+        throw new NotImplementedException();
     }
 
     // 5. Construa a funcionalidade de depositar dinheiro
@@ -74,5 +96,5 @@ public class TrybankLib
         throw new NotImplementedException();
     }
 
-   
+
 }
